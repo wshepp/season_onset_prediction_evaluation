@@ -76,7 +76,11 @@ generate_model <- function(cleaned_df){
 flunet_df <- read.csv('Data/VIW_FNT.csv', header = T)
 fluid_df <- read.csv('Data/VIW_FID_EPI.csv', header = T)
 
-cleaned_df <- preprocessing("Australia", fluid_df, flunet_df)
+start_date <- '2012-01-01'
+end_date <- '2024-06-30'
+country <- 'Australia'
+
+cleaned_df <- preprocessing(country, fluid_df, flunet_df, start_date, end_date)
 
 gr_results <- generate_model(cleaned_df)
 gr_results
