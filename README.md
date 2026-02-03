@@ -8,4 +8,4 @@ The code written is for the poster 'An evaluation of influenza season onset pred
 In order to run the files:
 1. Download current fluID and fluNet data from https://www.who.int/teams/global-influenza-programme/surveillance-and-monitoring/influenza-surveillance-outputs and place in the 'Data' folder
 2. Run code_final_results for replaicated resutls. Note: this will take around 15-20 minutes due the ammount of models needed to be generated
-3. Run preprocessing and then model_genearation to test on current data.
+3. Run preprocessing and then model_genearation to test on current data. Modify the country name and start and end dates depending on what you are analysing.
