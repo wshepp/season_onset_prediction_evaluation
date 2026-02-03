@@ -2,7 +2,7 @@
 ilip_calc <- function(ili, lci, num_tests){
   return(ili*lci/num_tests)
 }
-preprocessing <- function(country_name, fluid_df, flunet_df){
+preprocessing <- function(country_name, fluid_df, flunet_df, start_date, end_date){
   
   # renaming columns for ease
   names(fluid_df)[names(fluid_df) == 'ISO_WEEKSTARTDATE'] <- 'week'
@@ -19,8 +19,8 @@ preprocessing <- function(country_name, fluid_df, flunet_df){
   names(flunet_df)[names(flunet_df) == 'INF_NEGATIVE'] <- 'lci_neg'
   
   # setting time frame
-  min_date <- as.Date('2012-01-01')
-  max_date <- as.Date('2024-06-30')
+  min_date <- as.Date(start_date)
+  max_date <- as.Date(end_date)
   
   fluid_df$week <- as.Date(fluid_df$week)
   flunet_df$week <- as.Date(flunet_df$week)
