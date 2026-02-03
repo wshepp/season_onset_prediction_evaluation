@@ -1,5 +1,5 @@
-# Code for 'An evaluation of influenza season onset prediction methods'
-## William Shepard
+# Code for 'An evaluation of influenza season onset prediction methods' 
+**William Shepard**
 
 The code written is for the poster 'An evaluation of influenza season onset prediction methods', as part of the 2025/2026 Mathematics and Statistics Vacation Scholarship Program at the University of Melbourne. There are three R files
 - `code_final_results.R`: runs all the code necessary to reproduce the results found in the poster
