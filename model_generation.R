@@ -3,15 +3,16 @@ library(mgcv)
 
 source("preprocessing.R")
 
+# function that takes in preprocessed ili+ data and outputs GAM growth rate model with CIs at multiple levels
 generate_model <- function(cleaned_df){
   # read in data for current plot
   data_df <- data.frame(
     week = cleaned_df$week,
     ilip = cleaned_df$ilip
   )
-  max_weeks <- length(cleaned_df$week)
+  n_weeks <- length(cleaned_df$week)
   # generate model for each indicator
-  model <- gam(log(ilip+EPS)~s(as.numeric(week), k = as.integer(floor(max_weeks/5))), 
+  model <- gam(log(ilip+EPS)~s(as.numeric(week), k = as.integer(floor(n_weeks/5))), 
                family = gaussian(), 
                data = data_df)
   
@@ -25,7 +26,7 @@ generate_model <- function(cleaned_df){
   
   # find quantiles for each indicator
   plotting_df <- data.frame()
-  for (j in 1:max_weeks){
+  for (j in 1:n_weeks){
     quan<- quantile(fits[j,], c(0.5,0.025,0.05,0.1,0.25,0.75,0.9,0.95,0.975))
     row <- data.frame(time = pdat$week[j],
                       t_step = j,
@@ -52,7 +53,7 @@ generate_model <- function(cleaned_df){
   
   plotting_gr_df <- data.frame()
   # find quantiles for each indicator growth rate
-  for (j in 1:max_weeks){
+  for (j in 1:n_weeks){
     quan<- quantile(df_fits[j,], c(0.5,0.025,0.05,0.1,0.25,0.75,0.9,0.95,0.975))
     row <- data.frame(time = pdat$week[j],
                       t_step = j,
@@ -67,8 +68,8 @@ generate_model <- function(cleaned_df){
                       ub_95 = (quan[[9]]))
     plotting_gr_df <- rbind(plotting_gr_df, row)
   } 
-  # plot current graph
-  
+
+  # return GAM growth rate data
   return(plotting_gr_df)
 }
   
@@ -76,15 +77,19 @@ generate_model <- function(cleaned_df){
 flunet_df <- read.csv('Data/VIW_FNT.csv', header = T)
 fluid_df <- read.csv('Data/VIW_FID_EPI.csv', header = T)
 
+# set date range and desired country
 start_date <- '2012-01-01'
 end_date <- '2024-06-30'
 country <- 'Australia'
 
+# clean data
 cleaned_df <- preprocessing(country, fluid_df, flunet_df, start_date, end_date)
 
+# generate smoothed data
 gr_results <- generate_model(cleaned_df)
 gr_results
 
+# plot results
 ggplot(data = gr_results) +
   geom_line(aes(x = time, y = y, color = "Fitted Model")) +
   geom_ribbon(aes(
@@ -101,8 +106,8 @@ ggplot(data = gr_results) +
     ymax = ub_95,
     fill = "Fitted Model"
   ), alpha = 0.2) +
-  coord_cartesian(xlim = c(as.Date("2012-01-01") + 180,
-                           as.Date("2024-07-01") - 180)) +
+  coord_cartesian(xlim = c(start_date + 180,
+                           end_date - 180)) +
   scale_x_date(date_breaks = "1 year", date_labels =  "%Y") +
   scale_color_manual("", values = c("Fitted Model" = "black")) +
   scale_fill_manual("", values = c("Fitted Model" = "black")) +
