@@ -2,8 +2,9 @@
 ilip_calc <- function(ili, lci, num_tests){
   return(ili*lci/num_tests)
 }
+
+# function that preprocesses raw fluID data using both fluID and FluNet data from WHO
 preprocessing <- function(country_name, fluid_df, flunet_df, start_date, end_date){
-  
   # renaming columns for ease
   names(fluid_df)[names(fluid_df) == 'ISO_WEEKSTARTDATE'] <- 'week'
   names(flunet_df)[names(flunet_df) == 'ISO_WEEKSTARTDATE'] <- 'week'
@@ -32,7 +33,8 @@ preprocessing <- function(country_name, fluid_df, flunet_df, start_date, end_dat
   fluid_df <- fluid_df[fluid_df$country == country_name, ]
   flunet_df <- flunet_df[flunet_df$country == country_name, ]
   fluid_df$ili[is.na(fluid_df$ili)] <- 0
-  
+
+  # create new dfs removing unused data
   fluid_df <- summarise(
     group_by(fluid_df, week),
     ili = sum(ili)
